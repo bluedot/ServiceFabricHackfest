@@ -1,61 +1,122 @@
-﻿@{
-    ViewData["Title"] = "SF OneApp - Index";
-}
-<!-- Content Row -->
-<div class="row">
-    <!-- Heading row -->
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Service Fabric Sample Application</h1>
-            <p>This application is a sample to help you get a good introduction to Service Fabric applications. <br /> The application consists of multiple services to show how the different types of Service Fabric services works, as well as how they can communicate.</p>
-        </div>
-        <!-- Service column -->
-        <div class="col-md-12">
-            <p>
-                There are five services in the application. Each of the services have a UI exposed in this web application, which is being hosted by the WebService. The web application is built using HTML and JavaScript and communicate via the HTTP API exposed by the WebService. <br />
-                We have added some basic UI elements and implemented calls to some of the exposed HTTP APIs. Feel free to add on to the application.
+﻿<div ng-app="app">
+    <style>
+        .input-control {
+            min-width: 80%;
+        }
+    </style>
+    <div ng-app="app" ng-controller="MainController as $ctrl">
+        <p class="input-container">
+            <label for="apiEndpoint">API Endpoint</label>
+            <input class="input-control" name="apiEndpoint" type="text" ng-model="$ctrl.apiEndPoint" />
+        </p>
 
-                <div class="list-group">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <h4>WebService</h4></a>
-                        </li>
-                        <li class="list-group-item">A reliable stateless service built using ASP.NET Core. The service functions as a gateway exposing an HTTP RESTFul endpoint with an API to communicate with the backend services. The service also serves the Web UI.</li>
-                    </ul>
-                </div>
-                <div class="list-group">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="/Home/Stateless"><h4>StatelessBackendService</h4></a>
-                        </li>
-                        <li class="list-group-item">A reliable stateless service built using .NET Framework. The service exposes a Service Remoting endpoint and a single method though an interface.</li>
-                    </ul>
-                </div>
-                <div class="list-group">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="/Home/Stateful"><h4>StatefulBackendService</h4></a>
-                        </li>
-                        <li class="list-group-item">A reliable stateful service built using ASP.NET Core. The service exposes an HTTP RESTFul endpoint with an API. The services store key value pairs in partitions based on the first letter of the key.</li>
-                    </ul>
-                </div>
-                <div class="list-group">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="/Home/Actor"><h4>ActorBackendService</h4></a>
-                        </li>
-                        <li class="list-group-item">A Reliable Actors service. The service creates actor instances and exposes a Service Remoting endpoint and two methods to invoke an actor instance and to get the number of active actors.</li>
-                    </ul>
-                </div>
-                <div class="list-group">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <a href="/Home/GuestExe"><h4>GuestExecutableService</h4></a>
-                        </li>
-                        <li class="list-group-item">A guest executable service. The service is an executable program that hosts a webserver responding to HTTP GET commands.</li>
-                    </ul>
-                </div>
-            </p>
-        </div>
+        <p class="input-container">
+            <label for="message-templates">Message Templates</label>
+
+            <select name="message-templates" ng-options="item.name for item in $ctrl.transactionTemplates" ng-model="$ctrl.selectedTemplate"
+                    ng-change="$ctrl.selectTemplate(ctrl.selectedTemplate)">
+                <option value="">-- Select --</option>
+            </select>
+        </p>
+
+        <p>
+            <label for="request">REQUEST</label>
+            <br />
+            <textarea name="request" cols="160" rows="15">{{$ctrl.request.options | json}}</textarea>
+            <br />
+            <button ng-click="$ctrl.submit()">Submit</button>
+            <button ng-click="$ctrl.clear()">Clear</button>
+        </p>
+
+        <p>
+            <label for="response">RESPONSE</label>
+            <br />
+            <pre style="min-width:100%">{{$ctrl.response | json}}</pre>
+        </p>
     </div>
 </div>
+
+<script>
+
+    angular.module("app", []).controller("MainController", function ($http) {
+        var vm = this;
+        Object.assign(vm, {
+            apiEndPoint: "http://localhost:8081/api/",
+            selectedTemplate: null,
+            request: null,
+            transactionTemplates: getTransactionTemplates(),
+            response: null,
+            selectTemplate: selectTemplate,
+            submit: submit,
+            clear: clear
+        });
+
+        function selectTemplate() {
+            vm.request = angular.copy(vm.selectedTemplate);
+        }
+
+        function submit() {
+            var options = angular.copy(vm.request.options);
+            options.url = vm.apiEndPoint + options.url;
+
+            $http(options).then(
+              res => (vm.response = res),
+              err => (vm.response = err)
+            );
+        }
+
+        function clear() {
+            vm.request = null;
+        }
+    });
+
+    function getTransactionTemplates() {
+        return [
+          {
+              name: "Login",
+
+              options: {
+                  url: "messages",
+                  method: "POST",
+                  data: {
+                      type: "login",
+                      payload: {
+                          username: "user",
+                          password: "password"
+                      }
+                  }
+              }
+          },
+          {
+              name: "Put Data",
+              options: {
+                  method: "POST",
+                  url: "messages",
+                  type: "putdata",
+                  data: {
+                      nodes: [
+                        {
+                            type: "WorkOrder",
+                            id: "11111",
+                            props: { desc: "Fix Valve #1" }
+                        },
+                        {
+                            type: "WorkOrder",
+                            id: "222222",
+                            props: { desc: "Fix Valve #2" }
+                        }
+                      ]
+                  }
+              }
+          },
+          {
+              name: "Get All Messages",
+              options: {
+                  method: "GET",
+                  url: "messages"
+              }
+          }
+        ];
+    }
+
+</script>
