@@ -72,29 +72,39 @@
 
     function getTransactionTemplates() {
         return [
-          {
-              name: "Login",
 
-              options: {
-                  url: "messages",
-                  method: "POST",
-                  data: {
-                      type: "login",
-                      payload: {
-                          username: "user",
-                          password: "password"
-                      }
-                  }
-              }
-          },
-          {
-              name: "Put Data",
-              options: {
-                  method: "POST",
-                  url: "messages",
-                  type: "putdata",
-                  data: {
-                      nodes: [
+            {
+                name: "Ping",
+                options: {
+                    method: "GET",
+                    url: "ping"
+                }
+            },
+
+            {
+                name: "Login",
+
+                options: {
+                    url: "messages",
+                    method: "POST",
+                    data: {
+                        type: "login",
+                        payload: {
+                            username: "user",
+                            password: "password"
+                        }
+                    }
+                }
+            },
+
+            {
+                name: "Put Data",
+                options: {
+                    method: "POST",
+                    url: "messages",
+                    type: "putdata",
+                    data: {
+                        nodes: [
                         {
                             type: "WorkOrder",
                             id: "11111",
@@ -105,17 +115,19 @@
                             id: "222222",
                             props: { desc: "Fix Valve #2" }
                         }
-                      ]
-                  }
-              }
-          },
-          {
-              name: "Get All Messages",
-              options: {
-                  method: "GET",
-                  url: "messages"
-              }
-          }
+                        ]
+                    }
+                }
+            },
+
+            {
+                name: "Get All Messages",
+                options: {
+                    method: "GET",
+                    url: "messages"
+                }
+            }
+
         ];
     }
 
