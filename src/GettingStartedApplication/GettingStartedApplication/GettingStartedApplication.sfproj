@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ActorBackendService\ActorBackendService.csproj" />
+    <ProjectReference Include="..\LoginApi\LoginApi.csproj" />
     <ProjectReference Include="..\StatefulBackendService\StatefulBackendService.xproj" />
     <ProjectReference Include="..\StatelessBackendService\StatelessBackendService.csproj" />
     <ProjectReference Include="..\WebApi\WebApi.csproj" />
