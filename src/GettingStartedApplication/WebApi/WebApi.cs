@@ -14,9 +14,13 @@ namespace WebApi
     /// </summary>
     internal sealed class WebApi : StatelessService
     {
+        public static ServiceContext ServiceContext;
+
         public WebApi(StatelessServiceContext context)
             : base(context)
-        { }
+        {
+            ServiceContext = context;
+        }
 
         /// <summary>
         /// Optional override to create listeners (like tcp, http) for this service instance.
