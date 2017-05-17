@@ -70,10 +70,7 @@
                 var options = angular.copy(vm.request.options);
                 options.url = vm.apiEndPoint + options.url;
 
-                $http(options).then(
-                  res => (vm.response = res),
-                  err => (vm.response = err)
-                );
+                $http(options).then(res => (vm.response = res), err => (vm.response = err));
             }
 
             function clear() {
@@ -83,64 +80,65 @@
 
         function getTransactionTemplates() {
             return [
+              {
+                  name: "Ping",
+                  options: {
+                      method: "GET",
+                      url: "values"
+                  }
+              },
 
-                {
-                    name: "Ping",
-                    options: {
-                        method: "GET",
-                        url: "values"
-                    }
-                },
+              {
+                  name: "Login",
+                  options: {
+                      url: "messages",
+                      method: "POST",
+                      data: {
+                          type: "login",
+                          payload: {
+                              username: "user",
+                              password: "password"
+                          }
+                      }
+                  }
+              },
 
-                {
-                    name: "Login",
+              {
+                  name: "Put Data",
+                  options: {
+                      method: "POST",
+                      url: "messages",
+                      data: {
+                          type: "putdata",
+                          payload: {
 
-                    options: {
-                        url: "messages",
-                        method: "POST",
-                        data: {
-                            type: "login",
-                            payload: {
-                                username: "user",
-                                password: "password"
-                            }
-                        }
-                    }
-                },
+                              nodes: [
+                                {
+                                    type: "WorkOrder",
+                                    id: "11111",
+                                    props: { desc: "Fix Valve #1" }
+                                },
+                                {
+                                    type: "WorkOrder",
+                                    id: "222222",
+                                    props: { desc: "Fix Valve #2" }
+                                }
+                              ]
+                          }
+                      }
+                  }
+              },
 
-                {
-                    name: "Put Data",
-                    options: {
-                        method: "POST",
-                        url: "messages",
-                        type: "putdata",
-                        data: {
-                            nodes: [
-                            {
-                                type: "WorkOrder",
-                                id: "11111",
-                                props: { desc: "Fix Valve #1" }
-                            },
-                            {
-                                type: "WorkOrder",
-                                id: "222222",
-                                props: { desc: "Fix Valve #2" }
-                            }
-                            ]
-                        }
-                    }
-                },
-
-                {
-                    name: "Get All Messages",
-                    options: {
-                        method: "GET",
-                        url: "messages"
-                    }
-                }
-
+              {
+                  name: "Get All Messages",
+                  options: {
+                      method: "GET",
+                      url: "messages"
+                  }
+              }
             ];
         }
+
 
     </script>
 
