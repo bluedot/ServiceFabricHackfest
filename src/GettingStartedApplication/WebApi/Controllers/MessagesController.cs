@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Fabric;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,30 +20,64 @@ namespace WebApi.Controllers
             return Request.CreateResponse(System.Net.HttpStatusCode.OK, new List<Message> { new Message { Type = "xxx" } });
         }
 
-        public HttpResponseMessage Post(Message message)
+        public async Task<HttpResponseMessage> Post(Message message)
         {
-            if (message != null)
+            switch(message.Type)
             {
-                //if (message.Type == "login")
-                //{
-                //    CallLoginService(message);
-                //}
-                //else if (message.Type == "putdata")
-                //{
-                //    CallPutDataService(message);
-                //}
-
-                return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+                case "login":
+                    return await CallLoginService(message);
+                //case "putdata":
+                default:
+                    return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-            return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);
+
+            //if (message != null)
+            //{
+            //    if (message.Type == "login")
+            //    {
+            //        return await CallLoginService(message);
+            //    }
+            //    //else if (message.Type == "putdata")
+            //    //{
+            //    //    CallPutDataService(message);
+            //    //}
+            //    return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest));
+
+            //    return Request.CreateResponse(System.Net.HttpStatusCode.OK);
+            //}
+            //return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);
         }
 
-        private void CallLoginService(Message message)
+        private async Task<HttpResponseMessage> CallLoginService(Message message)
         {
-            string serviceUri = WebApi.ServiceContext.CodePackageActivationContext.ApplicationName + "/LoginService";
+            //string serviceUri = WebApi.ServiceContext.CodePackageActivationContext.ApplicationName + "/LoginService";
             //LoginService proxy = ServiceProxy.Create<LonginService>(new Uri(serviceUri));
             //long result = await proxy.Login(message);
             //return this.Json(new { Count = result });
+
+            var baseUri = "http://localhost:9054/api/";
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseUri);
+
+                var loginRequest = new LoginRequest
+                {
+                    Username = message.Payload["username"].ToString(),
+                    Password = message.Payload["password"].ToString()
+                };
+
+                var response = await client.PostAsJsonAsync("login", loginRequest);
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+
+                return Request.CreateErrorResponse(response.StatusCode, new Exception(content));
+            }
         }
 
         private void CallPutDataService(Message message)

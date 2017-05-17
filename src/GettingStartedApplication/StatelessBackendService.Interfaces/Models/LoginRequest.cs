@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace StatelessBackendService.Interfaces.Models
 {
-    public class Message
+    public class LoginRequest
     {
-        public string Type { get; set; }
-        public IDictionary<string, object> Payload { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }
