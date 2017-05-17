@@ -30,6 +30,7 @@
     <ProjectReference Include="..\ActorBackendService\ActorBackendService.csproj" />
     <ProjectReference Include="..\StatefulBackendService\StatefulBackendService.xproj" />
     <ProjectReference Include="..\StatelessBackendService\StatelessBackendService.csproj" />
+    <ProjectReference Include="..\WebApi\WebApi.csproj" />
     <ProjectReference Include="..\WebService\WebService.xproj" />
   </ItemGroup>
   <ItemGroup>

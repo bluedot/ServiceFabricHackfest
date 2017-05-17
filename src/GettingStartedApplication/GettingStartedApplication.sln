@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatelessBackendService.Int
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StatefulBackendService", "StatefulBackendService\StatefulBackendService.xproj", "{8CD4EAA3-0100-4504-91C4-2EC486BCF953}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{770E18CF-B372-435D-84F7-841C6DE6B5EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -57,6 +59,10 @@ Global
 		{8CD4EAA3-0100-4504-91C4-2EC486BCF953}.Debug|x64.Build.0 = Debug|Any CPU
 		{8CD4EAA3-0100-4504-91C4-2EC486BCF953}.Release|x64.ActiveCfg = Release|Any CPU
 		{8CD4EAA3-0100-4504-91C4-2EC486BCF953}.Release|x64.Build.0 = Release|Any CPU
+		{770E18CF-B372-435D-84F7-841C6DE6B5EA}.Debug|x64.ActiveCfg = Debug|x64
+		{770E18CF-B372-435D-84F7-841C6DE6B5EA}.Debug|x64.Build.0 = Debug|x64
+		{770E18CF-B372-435D-84F7-841C6DE6B5EA}.Release|x64.ActiveCfg = Release|x64
+		{770E18CF-B372-435D-84F7-841C6DE6B5EA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
