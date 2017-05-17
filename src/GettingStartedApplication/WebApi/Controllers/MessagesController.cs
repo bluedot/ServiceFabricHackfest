@@ -19,7 +19,7 @@ namespace WebApi.Controllers
             return Request.CreateResponse(System.Net.HttpStatusCode.OK, new List<Message> { new Message { Type = "xxx" } });
         }
 
-        public HttpResponseMessage Post([FromBody] string message)
+        public HttpResponseMessage Post(Message message)
         {
             if (message != null)
             {
@@ -31,6 +31,7 @@ namespace WebApi.Controllers
                 //{
                 //    CallPutDataService(message);
                 //}
+
                 return Request.CreateResponse(System.Net.HttpStatusCode.OK);
             }
             return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);

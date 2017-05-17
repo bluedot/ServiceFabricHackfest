@@ -19,8 +19,9 @@ namespace WebApi.Controllers
         }
 
         // POST api/values 
-        public void Post([FromBody]string value)
+        public void Post(string value)
         {
+            string x = value;
         }
 
         // PUT api/values/5 
