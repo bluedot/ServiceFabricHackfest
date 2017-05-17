@@ -20,6 +20,7 @@ namespace StatefulBackendService
     /// </summary>
     internal sealed class StatefulBackendService : StatefulService
     {
+        internal const string messageQueue = "putMessageQueue";
         public StatefulBackendService(StatefulServiceContext context)
             : base(context)
         {
@@ -54,6 +55,25 @@ namespace StatefulBackendService
                                     .Build();
                             }))
             };
+        }
+
+        protected override async Task RunAsync(CancellationToken cancellationToken)
+        {
+            IReliableQueue<string> messageQueue = await this.StateManager.GetOrAddAsync<IReliableQueue<string>>("messageQueue");
+            const string baseAddress = "http://localhost:8864";
+            HttpClient client = new HttpClient();
+            HttpResponseMessage res = client.GetAsync(baseAddress + "api/values/5").Result;
+            res.EnsureSuccessStatusCode();
+            var results = res.Content.ReadAsStringAsync().Result;
+            using (ITransaction tx = this.StateManager.CreateTransaction())
+            {
+
+                await messageQueue.EnqueueAsync(tx, results);
+                await tx.CommitAsync();
+
+            }
+             
+
         }
     }
 }
