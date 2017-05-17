@@ -14,6 +14,11 @@ namespace StatefulBackendService
     using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
     using Microsoft.ServiceFabric.Services.Communication.Runtime;
     using Microsoft.ServiceFabric.Services.Runtime;
+    using Microsoft.ServiceFabric.Data.Collections;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Threading;
+    using Microsoft.Owin.Hosting;
 
     /// <summary>
     /// The FabricRuntime creates an instance of this class for each service type instance. 
@@ -61,17 +66,22 @@ namespace StatefulBackendService
         {
             IReliableQueue<string> messageQueue = await this.StateManager.GetOrAddAsync<IReliableQueue<string>>("messageQueue");
             const string baseAddress = "http://localhost:8864";
-            HttpClient client = new HttpClient();
-            HttpResponseMessage res = client.GetAsync(baseAddress + "api/values/5").Result;
-            res.EnsureSuccessStatusCode();
-            var results = res.Content.ReadAsStringAsync().Result;
-            using (ITransaction tx = this.StateManager.CreateTransaction())
+            using (Microsoft.Owin.Hosting.WebApp.Start<Startup>(baseAddress))
             {
+                HttpClient client = new HttpClient();
+                HttpResponseMessage res = client.GetAsync(baseAddress + "api/values/5").Result;
+                res.EnsureSuccessStatusCode();
+                var results = res.Content.ReadAsStringAsync().Result;
+                using (ITransaction tx = this.StateManager.CreateTransaction())
+                {
 
-                await messageQueue.EnqueueAsync(tx, results);
-                await tx.CommitAsync();
+                    await messageQueue.EnqueueAsync(tx, results);
+                    await tx.CommitAsync();
 
+                }
             }
+
+              
              
 
         }
