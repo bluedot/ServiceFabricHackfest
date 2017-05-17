@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div ng-app="app">
+        <style>
+            .input-control {
+                min-width: 80%;
+            }
+        </style>
+        <div ng-app="app" ng-controller="MainController as $ctrl">
+            <p class="input-container">
+                <label for="apiEndpoint">API Endpoint</label>
+                <input class="input-control" name="apiEndpoint" type="text" ng-model="$ctrl.apiEndPoint" />
+            </p>
+
+            <p class="input-container">
+                <label for="message-templates">Message Templates</label>
+
+                <select name="message-templates" ng-options="item.name for item in $ctrl.transactionTemplates" ng-model="$ctrl.selectedTemplate"
+                        ng-change="$ctrl.selectTemplate(ctrl.selectedTemplate)">
+                    <option value="">-- Select --</option>
+                </select>
+            </p>
+
+            <p>
+                <label for="request">REQUEST</label>
+                <br />
+                <textarea name="request" cols="160" rows="15">{{$ctrl.request.options | json}}</textarea>
+                <br />
+                <button ng-click="$ctrl.submit()">Submit</button>
+                <button ng-click="$ctrl.clear()">Clear</button>
+            </p>
+
+            <p>
+                <label for="response">RESPONSE</label>
+                <br />
+                <pre style="min-width:100%">{{$ctrl.response | json}}</pre>
+            </p>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+
+    <script>
+
+        angular.module("app", []).controller("MainController", function ($http) {
+            var vm = this;
+
+            Object.assign(vm, {
+                apiEndPoint: "/api/",
+                selectedTemplate: null,
+                request: null,
+                transactionTemplates: getTransactionTemplates(),
+                response: null,
+                selectTemplate: selectTemplate,
+                submit: submit,
+                clear: clear
+            });
+
+            function selectTemplate() {
+                vm.request = angular.copy(vm.selectedTemplate);
+            }
+
+            function submit() {
+                var options = angular.copy(vm.request.options);
+                options.url = vm.apiEndPoint + options.url;
+
+                $http(options).then(
+                  res => (vm.response = res),
+                  err => (vm.response = err)
+                );
+            }
+
+            function clear() {
+                vm.request = null;
+            }
+        });
+
+        function getTransactionTemplates() {
+            return [
+
+                {
+                    name: "Ping",
+                    options: {
+                        method: "GET",
+                        url: "values"
+                    }
+                },
+
+                {
+                    name: "Login",
+
+                    options: {
+                        url: "messages",
+                        method: "POST",
+                        data: {
+                            type: "login",
+                            payload: {
+                                username: "user",
+                                password: "password"
+                            }
+                        }
+                    }
+                },
+
+                {
+                    name: "Put Data",
+                    options: {
+                        method: "POST",
+                        url: "messages",
+                        type: "putdata",
+                        data: {
+                            nodes: [
+                            {
+                                type: "WorkOrder",
+                                id: "11111",
+                                props: { desc: "Fix Valve #1" }
+                            },
+                            {
+                                type: "WorkOrder",
+                                id: "222222",
+                                props: { desc: "Fix Valve #2" }
+                            }
+                            ]
+                        }
+                    }
+                },
+
+                {
+                    name: "Get All Messages",
+                    options: {
+                        method: "GET",
+                        url: "messages"
+                    }
+                }
+
+            ];
+        }
+
+    </script>
+
+</body>
+</html>
