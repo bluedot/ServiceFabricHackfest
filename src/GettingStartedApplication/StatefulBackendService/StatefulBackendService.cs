@@ -14,12 +14,14 @@ namespace StatefulBackendService
     using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
     using Microsoft.ServiceFabric.Services.Communication.Runtime;
     using Microsoft.ServiceFabric.Services.Runtime;
+  
 
     /// <summary>
     /// The FabricRuntime creates an instance of this class for each service type instance. 
     /// </summary>
     internal sealed class StatefulBackendService : StatefulService
     {
+        internal const string messageQueue = "putMessageQueue";
         public StatefulBackendService(StatefulServiceContext context)
             : base(context)
         {
@@ -55,5 +57,30 @@ namespace StatefulBackendService
                             }))
             };
         }
+
+        //protected override async Task RunAsync(CancellationToken cancellationToken)
+        //{
+        //    IReliableQueue<string> messageQueue = await this.StateManager.GetOrAddAsync<IReliableQueue<string>>("messageQueue");
+        //    const string baseAddress = "http://localhost:8864";
+
+        //    using (Microsoft.Owin.Hosting.WebApp.Start<Startup>(baseAddress))
+        //    {
+        //        HttpClient client = new HttpClient();
+        //        HttpResponseMessage res = client.GetAsync(baseAddress + "api/values/5").Result;
+        //        res.EnsureSuccessStatusCode();
+        //        var results = res.Content.ReadAsStringAsync().Result;
+        //        using (ITransaction tx = this.StateManager.CreateTransaction())
+        //        {
+
+        //            await messageQueue.EnqueueAsync(tx, results);
+        //            await tx.CommitAsync();
+
+        //        }
+        //    }
+
+
+
+
+        //}
     }
 }

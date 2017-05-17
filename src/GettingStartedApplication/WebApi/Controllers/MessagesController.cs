@@ -26,7 +26,9 @@ namespace WebApi.Controllers
             {
                 case "login":
                     return await CallLoginService(message);
-                //case "putdata":
+                case "putdata":
+                    return await CallPutDataService(message);
+
                 default:
                     return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
@@ -50,17 +52,8 @@ namespace WebApi.Controllers
 
         private async Task<HttpResponseMessage> CallLoginService(Message message)
         {
-            //string serviceUri = WebApi.ServiceContext.CodePackageActivationContext.ApplicationName + "/LoginService";
-            //LoginService proxy = ServiceProxy.Create<LonginService>(new Uri(serviceUri));
-            //long result = await proxy.Login(message);
-            //return this.Json(new { Count = result });
-
-            var baseUri = "http://localhost:9054/api/";
-
-            using (var client = new HttpClient())
+            using (var client = GetLoginClient())
             {
-                client.BaseAddress = new Uri(baseUri);
-
                 var loginRequest = new LoginRequest
                 {
                     Username = message.Payload["username"].ToString(),
@@ -80,9 +73,19 @@ namespace WebApi.Controllers
             }
         }
 
-        private void CallPutDataService(Message message)
+
+
+        private async Task<HttpResponseMessage> CallPutDataService(Message message)
         {
             throw new NotImplementedException();
+        }
+
+        private HttpClient GetLoginClient()
+        {
+            return new HttpClient()
+            {
+                BaseAddress = new Uri( "http://localhost:9054/api/")
+            };
         }
     }
 }
