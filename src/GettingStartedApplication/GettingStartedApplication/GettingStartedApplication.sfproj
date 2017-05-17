@@ -29,10 +29,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ActorBackendService\ActorBackendService.csproj" />
     <ProjectReference Include="..\LoginApi\LoginApi.csproj" />
-    <ProjectReference Include="..\StatefulBackendService\StatefulBackendService.csproj" />
+    <ProjectReference Include="..\StatefulBackendService\StatefulBackendService.xproj" />
     <ProjectReference Include="..\StatelessBackendService\StatelessBackendService.csproj" />
     <ProjectReference Include="..\WebApi\WebApi.csproj" />
-    <ProjectReference Include="..\WebService\WebService.csproj" />
+    <ProjectReference Include="..\WebService\WebService.xproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApplicationPackageRoot\GuestExeBackendServicePkg\Code\SimpleWebServer.exe" />

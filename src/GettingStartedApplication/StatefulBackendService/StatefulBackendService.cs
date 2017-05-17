@@ -25,7 +25,6 @@ namespace StatefulBackendService
     /// </summary>
     internal sealed class StatefulBackendService : StatefulService
     {
-        internal const string messageQueue = "putMessageQueue";
         public StatefulBackendService(StatefulServiceContext context)
             : base(context)
         {
