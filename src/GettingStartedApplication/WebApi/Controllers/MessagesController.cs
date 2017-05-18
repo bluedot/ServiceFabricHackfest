@@ -1,11 +1,10 @@
-﻿using StatelessBackendService.Interfaces.Models;
+﻿using Microsoft.ServiceFabric.Data;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
+using StatelessBackendService.Interfaces;
+using StatelessBackendService.Interfaces.Models;
 using System;
-using System.Collections.Generic;
-using System.Fabric;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -14,10 +13,14 @@ namespace WebApi.Controllers
     [ServiceRequestActionFilter]
     public class MessagesController : ApiController
     {
-
-        public HttpResponseMessage Get()
+        public async Task<HttpResponseMessage> Get()
         {
-            return Request.CreateResponse(System.Net.HttpStatusCode.OK, new List<Message> { new Message { Type = "xxx" } });
+            //return Request.CreateResponse(System.Net.HttpStatusCode.OK, new List<Message> { new Message { Type = "xxx" } });
+
+            string serviceUri = WebApi.ServiceContext.CodePackageActivationContext.ApplicationName + "/StatefulBackendService";
+            IQueueAdapter proxy = ServiceProxy.Create<IQueueAdapter>(new Uri(serviceUri));
+            var result = await proxy.Pop();
+            return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
         public async Task<HttpResponseMessage> Post(Message message)
@@ -28,26 +31,9 @@ namespace WebApi.Controllers
                     return await CallLoginService(message);
                 case "putdata":
                     return await CallPutDataService(message);
-
                 default:
                     return Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
-            //if (message != null)
-            //{
-            //    if (message.Type == "login")
-            //    {
-            //        return await CallLoginService(message);
-            //    }
-            //    //else if (message.Type == "putdata")
-            //    //{
-            //    //    CallPutDataService(message);
-            //    //}
-            //    return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest));
-
-            //    return Request.CreateResponse(System.Net.HttpStatusCode.OK);
-            //}
-            //return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);
+            }            
         }
 
         private async Task<HttpResponseMessage> CallLoginService(Message message)
@@ -56,8 +42,8 @@ namespace WebApi.Controllers
             {
                 var loginRequest = new LoginRequest
                 {
-                    Username = message.Payload["username"].ToString(),
-                    Password = message.Payload["password"].ToString()
+                    //Username = message.Payload["username"].ToString(),
+                    //Password = message.Payload["password"].ToString()
                 };
 
                 var response = await client.PostAsJsonAsync("login", loginRequest);
@@ -73,11 +59,12 @@ namespace WebApi.Controllers
             }
         }
 
-
-
         private async Task<HttpResponseMessage> CallPutDataService(Message message)
         {
-            throw new NotImplementedException();
+            string serviceUri = WebApi.ServiceContext.CodePackageActivationContext.ApplicationName + "/StatefulBackendService";
+            IQueueAdapter proxy = ServiceProxy.Create<IQueueAdapter>(new Uri(serviceUri));
+            var result = await proxy.Push(message);
+            return Request.CreateResponse(HttpStatusCode.Accepted);
         }
 
         private HttpClient GetLoginClient()

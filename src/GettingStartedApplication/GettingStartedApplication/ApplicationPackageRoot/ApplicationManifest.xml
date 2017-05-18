@@ -83,7 +83,8 @@
     </Service>
     <Service Name="StatefulBackendService">
       <StatefulService ServiceTypeName="StatefulBackendServiceType" TargetReplicaSetSize="[StatefulBackendService_TargetReplicaSetSize]" MinReplicaSetSize="[StatefulBackendService_MinReplicaSetSize]">
-        <UniformInt64Partition PartitionCount="[StatefulBackendService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+        <!--<UniformInt64Partition PartitionCount="[StatefulBackendService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />-->
+        <SingletonPartition />
       </StatefulService>
     </Service>
     <Service Name="StatelessBackendService">

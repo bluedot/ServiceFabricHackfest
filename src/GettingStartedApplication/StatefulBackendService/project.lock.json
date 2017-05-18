@@ -1110,6 +1110,22 @@
           "lib/net45/Microsoft.ServiceFabric.Data.dll": {}
         }
       },
+      "Microsoft.ServiceFabric.FabricTransport.Internal/2.5.216": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric": "[5.5.216]"
+        },
+        "frameworkAssemblies": [
+          "System.Runtime.Serialization",
+          "System.ServiceModel"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.ServiceFabric.FabricTransport.dll": {}
+        }
+      },
       "Microsoft.ServiceFabric.Services/2.5.216": {
         "type": "package",
         "dependencies": {
@@ -1121,6 +1137,19 @@
         },
         "runtime": {
           "lib/net45/Microsoft.ServiceFabric.Services.dll": {}
+        }
+      },
+      "Microsoft.ServiceFabric.Services.Remoting/2.5.216": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.ServiceFabric.FabricTransport.Internal": "[2.5.216]",
+          "Microsoft.ServiceFabric.Services": "[2.5.216]"
+        },
+        "compile": {
+          "lib/net45/Microsoft.ServiceFabric.Services.Remoting.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.ServiceFabric.Services.Remoting.dll": {}
         }
       },
       "Newtonsoft.Json/9.0.1": {
@@ -1469,6 +1498,9 @@
         "runtime": {
           "lib/portable-net45+win8+wp8+wpa81/System.Threading.Tasks.Extensions.dll": {}
         }
+      },
+      "StatelessBackendService.Interfaces/1.0.0": {
+        "type": "project"
       }
     }
   },
@@ -2452,6 +2484,17 @@
         "microsoft.servicefabric.data.nuspec"
       ]
     },
+    "Microsoft.ServiceFabric.FabricTransport.Internal/2.5.216": {
+      "sha512": "pax0a9IYgVGZRilqDNEavmyDWw1Zb+nsYnQjb3jr5ih3fBnY3v42X4/5vdMEqyUDNyyk//4tT+c9qxq86wGt4A==",
+      "type": "package",
+      "path": "Microsoft.ServiceFabric.FabricTransport.Internal/2.5.216",
+      "files": [
+        "Microsoft.ServiceFabric.FabricTransport.Internal.2.5.216.nupkg.sha512",
+        "Microsoft.ServiceFabric.FabricTransport.Internal.nuspec",
+        "lib/net45/Microsoft.ServiceFabric.FabricTransport.dll",
+        "lib/net45/Microsoft.ServiceFabric.FabricTransport.xml"
+      ]
+    },
     "Microsoft.ServiceFabric.Services/2.5.216": {
       "sha512": "PFBuKDMAqqIty65tiOzOYqM8Hdk/GTmfr8AjK/W3BCe8nUB2DW2yOEQXgolyb5WNGLF5+SEz5Y3MD04VtdplQg==",
       "type": "package",
@@ -2461,6 +2504,17 @@
         "lib/net45/Microsoft.ServiceFabric.Services.xml",
         "microsoft.servicefabric.services.2.5.216.nupkg.sha512",
         "microsoft.servicefabric.services.nuspec"
+      ]
+    },
+    "Microsoft.ServiceFabric.Services.Remoting/2.5.216": {
+      "sha512": "2DX3EFzeNruOHnb93KHFax/7rmxcy6hTsJm/OMclo+lVWtRkwhCGLcF9g59GbTfrsC/hgV1lHYtzS0MEMGqtfw==",
+      "type": "package",
+      "path": "Microsoft.ServiceFabric.Services.Remoting/2.5.216",
+      "files": [
+        "Microsoft.ServiceFabric.Services.Remoting.2.5.216.nupkg.sha512",
+        "Microsoft.ServiceFabric.Services.Remoting.nuspec",
+        "lib/net45/Microsoft.ServiceFabric.Services.Remoting.dll",
+        "lib/net45/Microsoft.ServiceFabric.Services.Remoting.xml"
       ]
     },
     "Newtonsoft.Json/9.0.1": {
@@ -4123,6 +4177,10 @@
         "system.threading.tasks.extensions.4.0.0.nupkg.sha512",
         "system.threading.tasks.extensions.nuspec"
       ]
+    },
+    "StatelessBackendService.Interfaces/1.0.0": {
+      "type": "project",
+      "msbuildProject": "../StatelessBackendService.Interfaces/StatelessBackendService.Interfaces.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -4139,9 +4197,12 @@
       "Microsoft.ServiceFabric >= 5.5.216",
       "Microsoft.ServiceFabric.AspNetCore.Kestrel >= 2.5.216",
       "Microsoft.ServiceFabric.Data >= 2.5.216",
-      "Microsoft.ServiceFabric.Services >= 2.5.216"
+      "Microsoft.ServiceFabric.Services >= 2.5.216",
+      "Microsoft.ServiceFabric.Services.Remoting >= 2.5.216"
     ],
-    ".NETFramework,Version=v4.5.2": []
+    ".NETFramework,Version=v4.5.2": [
+      "StatelessBackendService.Interfaces"
+    ]
   },
   "tools": {},
   "projectFileToolGroups": {}
